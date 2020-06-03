@@ -45,6 +45,31 @@
                 </div>
               </div>
             </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-title">
+                            <h1 style="text-align:center">新动态</h1>
+                        </div>
+                        <div class="card-body">
+                            <div class="basic-elements">
+                                <form id="form" method="post">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <input id="dynamics" name="dynamics" v-model="dynamics" type="text" class="form-control" placeholder="">
+                                            </div>
+                                            <br/>
+                                            <button type="button" class="btn btn-danger btn-rounded m-b-10 m-l-5" style="width:48%" @click="MyClear"> 重置 </button>
+                                            <button id="button" type="button" class="btn btn-primary btn-rounded m-b-10 m-l-5" style="width:48%;float:right" @click="MyCheck"> 发送 </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- <div th:replace="Common/footer::footer"></div> -->
           </section>
         </div>
@@ -58,7 +83,8 @@ export default {
   inject: ['reload'],
   data () {
     return {
-      dynamicss: []
+      dynamicss: [],
+      dynamics: ''
     }
   },
   mounted () {
@@ -142,6 +168,74 @@ export default {
               })
             })
         })
+    },
+    MyError (str) {
+      this.$swal({
+        title: '提交异常！',
+        text: str,
+        type: 'error'
+      })
+    },
+    MyClear () {
+      this.dynamics = ''
+    },
+    MySubmit (str) {
+      this.$swal({
+        title: '确定要提交吗？',
+        text: str,
+        type: 'warning',
+        showCancelButton: true,
+        cancelButtonText: '取消',
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: '确定'
+      })
+        .then((isConfirm) => {
+          if (isConfirm.value == null) {
+            return 0
+          }
+          let dynamicsData = {
+            dynamics: this.dynamics
+          }
+          this.$axios.post('/api/dynamics', dynamicsData)
+            .then((response) => {
+              if (response.data.errno === 0) {
+                let message = '发送动态成功！'
+                this.$swal({
+                  title: '成功',
+                  text: message,
+                  type: 'success'
+                })
+                  .then(() => {
+                    this.reload()
+                  })
+              } else {
+                this.$swal({
+                  title: '失败',
+                  text: response.data.errmsg,
+                  type: 'error'
+                })
+                  .then(() => {
+                    this.reload()
+                  })
+              }
+            })
+            .catch((error) => {
+              console.log(error)// 打印服务端返回的数据(调试用)
+              let str = '发生了某些不知名的错误...\r' + error
+              this.MyError(str)
+            })
+        })
+    },
+    MyCheck () {
+      if (this.dynamics === '') {
+        let str = '动态不能为空！'
+        this.MyError(str)
+        return 0
+      }
+
+      var str = '新动态：' + this.dynamics
+
+      this.MySubmit(str)
     }
   }
 }
