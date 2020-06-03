@@ -31,7 +31,7 @@
                       </a>
                     </li>
                     <li>
-                      <a @click="jump('/friend/message')">
+                      <a @click="jump('/dynamics')">
                         <i class="fa fa-comments-o"></i>
                         好友动态
                       </a>
