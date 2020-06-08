@@ -5,6 +5,7 @@ import login from '@/components/login'
 import index from '@/components/index'
 import course from '@/components/course'
 import courseAdd from '@/components/courseAdd'
+import courseEdit from '@/components/courseEdit'
 import dynamics from '@/components/dynamics'
 
 Vue.use(Router)
@@ -38,6 +39,11 @@ export default new Router({
       path: '/course/add',
       name: 'courseAdd',
       component: courseAdd
+    },
+    {
+      path: '/course/edit',
+      name: 'courseEdit',
+      component: courseEdit
     },
     {
       path: '/dynamics',

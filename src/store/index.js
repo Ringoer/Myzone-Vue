@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    course: null,
     username: '',
     userId: '1',
     isLogin: false,
@@ -24,6 +25,9 @@ const store = new Vuex.Store({
     },
     setToken (state, token) {
       state.token = token
+    },
+    setCourse (state, course) {
+      state.course = course
     },
     changeSideBar (state) {
       if (state.widthOfSideBar === '15%') {
@@ -47,6 +51,9 @@ const store = new Vuex.Store({
     },
     setToken (context, token) {
       context.commit('setToken', token)
+    },
+    setCourse (context, course) {
+      context.commit('setCourse', course)
     },
     changeSideBar (context) {
       context.commit('changeSideBar')

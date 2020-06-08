@@ -43,11 +43,11 @@
                       </a>
                     </li>
                     <li>
-                        <a @click="change('course')">
-                            <i class="ti-layout-grid4-alt"></i>
-                            我的课程
-                            <span class="sidebar-collapse-icon ti-angle-down"></span>
-                        </a>
+                      <a @click="change('course')">
+                        <i class="ti-layout-grid4-alt"></i>
+                        我的课程
+                        <span class="sidebar-collapse-icon ti-angle-down"></span>
+                      </a>
                     </li>
                     <div>
                       <li>
@@ -67,7 +67,6 @@
                         个人设置
                       </a>
                     </li>
-                    <li><a @click="test">store测试</a></li>
                 </ul>
             </div>
         </div>
@@ -88,9 +87,6 @@ export default {
     }
   },
   methods: {
-    test () {
-      console.log(this.$store.state)
-    },
     change (opt) {
       if (opt === 'course') {
         this.isCourse = !this.isCourse

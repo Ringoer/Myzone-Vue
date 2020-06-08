@@ -11,7 +11,13 @@
                 <div class="card">
                   <div class="card-title">
                     <h1 style="text-align:center">课程一览</h1>
-                    <a href="javascript:void(0)" @click="$router.push('/course/add')" type="button" class="btn btn-primary btn-flat btn-addon m-b-10 m-l-5" style="float:right"><i class="ti-plus"></i>添加课程</a>
+                    <div class="col-lg-10" style="float:left">
+                      <input id="queryString" name="queryString" type="text" v-model="queryString" class="form-control" placeholder="搜索关键词请使用空格隔开（不支持模糊搜索）">
+                      <a href="javascript:void(0)" @click="MySearch" style="position:absolute;top:20px;right:35px"><i class="ti-search"></i></a>
+                    </div>
+                    <div class="col-lg-2" style="float:right">
+                      <a href="javascript:void(0)" @click="$router.push('/course/add')" type="button" class="btn btn-primary btn-flat btn-addon m-b-10 m-l-5" style="float:right"><i class="ti-plus"></i>添加课程</a>
+                    </div>
                   </div>
                   <br/>
                   <div class="card-body">
@@ -25,6 +31,7 @@
                           <td style="text-align:center">上课地点</td>
                           <td style="text-align:center">任课教师</td>
                           <td style="text-align:center">课程学分</td>
+                          <td style="text-align:center">编辑课程</td>
                           <td style="text-align:center">删除课程</td>
                         </tr>
                         </thead>
@@ -37,6 +44,11 @@
                           <td style="text-align:center">{{course.teacher}}</td>
                           <td style="text-align:center">{{course.credit}}</td>
                           <td style="text-align:center">
+                            <a href="javascript:void(0)" @click="MyEdit(course)">
+                              <i class="fa fa-pencil-square-o fa-lg"></i>
+                            </a>
+                          </td>
+                          <td style="text-align:center">
                             <a href="javascript:void(0)" @click="MyDelete(course)">
                               <i class="fa fa-trash fa-lg"></i>
                             </a>
@@ -44,6 +56,26 @@
                         </tr>
                         </tbody>
                       </table>
+                    </div>
+                    <div class="col-lg-12" style="text-align:center">
+                      <div class="card-body">
+                        <a href="javascript:void(0)" @click="MyChangePage(page - 1)" type="button" class="btn btn-default btn-outline m-b-10">
+                          &lt;
+                        </a>
+                        <a href="javascript:void(0)" @click="MyChangePage(tab)" type="button" class="btn btn-default btn-outline m-b-10" v-bind:style="{ 'background-color': (tab === page)?'grey':'', 'color': (tab === page)?'white':'' }" v-for="(tab, index) in tabs" :key="index">
+                          {{ tab }}
+                        </a>
+                        <a href="javascript:void(0)" @click="MyChangePage(page + 1)" type="button" class="btn btn-default btn-outline m-b-10">
+                          &gt;
+                        </a>
+                        &nbsp;
+                        <span>
+                          转到第
+                          <input id="queryPage" name="queryPage" type="text" v-model="queryPage" style="width: 40px; text-align: center">
+                          页
+                        </span>
+                        <a href="javascript:void(0)" @click="MyTurnTo" type="button" class="btn btn-success btn-sm m-b-10 m-l-5" style="margin-top: 10px"> 跳转 </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -62,7 +94,11 @@ export default {
   inject: ['reload'],
   data () {
     return {
-      courses: []
+      courses: [],
+      queryString: '',
+      queryPage: '',
+      page: 1,
+      tabs: [1, 2, 3, 4, 5]
     }
   },
   mounted () {
@@ -70,7 +106,7 @@ export default {
   },
   methods: {
     getCourses () {
-      this.$axios.get('/api/course')
+      this.$axios.get('/api/course', {params: {q: this.queryString, p: this.page}})
         .then((response) => {
           if (response.data.errno === 0) {
             this.courses = response.data.data
@@ -146,6 +182,41 @@ export default {
               })
             })
         })
+    },
+    MySearch () {
+      this.MyChangePage(1)
+    },
+    MyEdit (course) {
+      this.$store.dispatch('setCourse', course)
+      this.$router.push('/course/edit')
+    },
+    MyChangePage (tab) {
+      this.page = tab
+      let values = [0, 0, 0, 0, 0]
+      if (tab >= 3) {
+        for (var i = 0; i < 5; i++) {
+          values[i] = tab - 2 + i
+        }
+      } else {
+        for (i = 0; i < 5; i++) {
+          values[i] = i + 1
+        }
+      }
+      this.tabs = values
+      this.getCourses()
+    },
+    MyTurnTo () {
+      var n = Math.floor(Number(this.queryPage))
+      if (!(n !== Infinity && String(n) === this.queryPage && n > 0)) {
+        let str = '跳转页码不合法！'
+        this.$swal({
+          title: '提交异常！',
+          text: str,
+          type: 'error'
+        })
+      } else {
+        this.MyChangePage(Number(this.queryPage))
+      }
     }
   }
 }
