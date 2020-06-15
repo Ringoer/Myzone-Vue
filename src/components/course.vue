@@ -10,7 +10,7 @@
               <div class="col-lg-12">
                 <div class="card">
                   <div class="card-title">
-                    <h1 style="text-align:center">课程一览</h1>
+                    <h1 style="text-align:center">我的课程</h1>
                     <div class="col-lg-10" style="float:left">
                       <input id="queryString" name="queryString" type="text" v-model="queryString" class="form-control" placeholder="搜索关键词请使用空格隔开（不支持模糊搜索）">
                       <a href="javascript:void(0)" @click="MySearch" style="position:absolute;top:20px;right:35px"><i class="ti-search"></i></a>

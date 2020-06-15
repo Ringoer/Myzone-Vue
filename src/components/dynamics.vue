@@ -10,7 +10,7 @@
               <div class="col-lg-12">
                 <div class="card">
                   <div class="card-title">
-                    <h1 style="text-align:center">动态一览</h1>
+                    <h1 style="text-align:center">我的动态</h1>
                   </div>
                   <br/>
                   <div class="card-body">
@@ -40,6 +40,26 @@
                         </tr>
                         </tbody>
                       </table>
+                    </div>
+                    <div class="col-lg-12" style="text-align:center">
+                      <div class="card-body">
+                        <a href="javascript:void(0)" @click="MyChangePage(page - 1)" type="button" class="btn btn-default btn-outline m-b-10">
+                          &lt;
+                        </a>
+                        <a href="javascript:void(0)" @click="MyChangePage(tab)" type="button" class="btn btn-default btn-outline m-b-10" v-bind:style="{ 'background-color': (tab === page)?'grey':'', 'color': (tab === page)?'white':'' }" v-for="(tab, index) in tabs" :key="index">
+                          {{ tab }}
+                        </a>
+                        <a href="javascript:void(0)" @click="MyChangePage(page + 1)" type="button" class="btn btn-default btn-outline m-b-10">
+                          &gt;
+                        </a>
+                        &nbsp;
+                        <span>
+                          转到第
+                          <input id="queryPage" name="queryPage" type="text" v-model="queryPage" style="width: 40px; text-align: center">
+                          页
+                        </span>
+                        <a href="javascript:void(0)" @click="MyTurnTo" type="button" class="btn btn-success btn-sm m-b-10 m-l-5" style="margin-top: 10px"> 跳转 </a>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -84,7 +104,10 @@ export default {
   data () {
     return {
       dynamicss: [],
-      dynamics: ''
+      dynamics: '',
+      queryPage: '',
+      page: 1,
+      tabs: [1, 2, 3, 4, 5]
     }
   },
   mounted () {
@@ -92,7 +115,7 @@ export default {
   },
   methods: {
     getDynamicss () {
-      this.$axios.get('/api/dynamics')
+      this.$axios.get('/api/dynamics', {params: {p: this.page}})
         .then((response) => {
           if (response.data.errno === 0) {
             this.dynamicss = response.data.data
@@ -236,6 +259,34 @@ export default {
       var str = '新动态：' + this.dynamics
 
       this.MySubmit(str)
+    },
+    MyChangePage (tab) {
+      this.page = tab
+      let values = [0, 0, 0, 0, 0]
+      if (tab >= 3) {
+        for (var i = 0; i < 5; i++) {
+          values[i] = tab - 2 + i
+        }
+      } else {
+        for (i = 0; i < 5; i++) {
+          values[i] = i + 1
+        }
+      }
+      this.tabs = values
+      this.getDynamicss()
+    },
+    MyTurnTo () {
+      var n = Math.floor(Number(this.queryPage))
+      if (!(n !== Infinity && String(n) === this.queryPage && n > 0)) {
+        let str = '跳转页码不合法！'
+        this.$swal({
+          title: '提交异常！',
+          text: str,
+          type: 'error'
+        })
+      } else {
+        this.MyChangePage(Number(this.queryPage))
+      }
     }
   }
 }

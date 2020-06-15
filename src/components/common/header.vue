@@ -12,53 +12,67 @@
                     </div>
                     <!-- /# 选项卡开关 -->
                     <div class="float-right">
-                        <div class="dropdown dib">
-                            <div class="header-icon" data-toggle="dropdown">
+                        <div :class="messageDropdownClass">
+                            <div class="header-icon" data-toggle="dropdown" @click="changeMessageClass">
                                 <i class="ti-bell"></i>
-                                <div class="drop-down dropdown-menu dropdown-menu-right">
+                                <div :class="messageClass" style="position: absolute; transform: translate3d(-227px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
                                     <div class="dropdown-content-heading">
                                         <span class="text-left">通知</span>
+                                    </div>
+                                    <div class="dropdown-content-body">
+                                        <ul>
+                                            <li v-for="(message,index) in messages" :key="index">
+                                                <a href="#">
+                                                    <div class="notification-content">
+                                                        <small class="notification-timestamp pull-right"> {{ message.sendTime }} </small>
+                                                        <div class="notification-heading"> {{ message.topic }} </div>
+                                                        <div class="notification-text"> {{ message.content }} </div>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li class="text-center">
+                                                <a href="javasrcipt:void(0)" @click="jump('/message')" class="more-link"> 查看更多 </a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="dropdown dib">
+                        <div class="dropdown dib" v-show="false">
                             <div class="header-icon" data-toggle="dropdown">
                                 <i class="ti-email"></i>
                                 <div class="drop-down dropdown-menu dropdown-menu-right">
                                     <div class="dropdown-content-heading">
-                                        <span class="text-left">私信</span>
-                                        <a href="email.html">
-                                            <i class="ti-pencil-alt pull-right"></i>
-                                        </a>
+                                        <span class="text-left">Email</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="dropdown dib">
-                            <div class="header-icon" data-toggle="dropdown">
-                                <span class="user-avatar" v-text="this.$store.state.username" @click="isShow = !isShow">user
-                                    <i class="ti-angle-down f-s-10"></i>
+                        <div :class="infoDropdownClass">
+                            <div class="header-icon" data-toggle="dropdown" @click="changeInfoClass">
+                                <span class="user-avatar" v-text="this.$store.state.username">
+                                  user
+                                  <i class="ti-angle-down f-s-10"></i>
                                 </span>
-                                <div v-if="isShow" class="card" style="margin-left:-150px;width:200px;display:block;position:fixed;z-index:999999">
+                                <div :class="infoClass" style="position: absolute; transform: translate3d(-124px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
                                     <div class="dropdown-content-body">
-                                        <ul style>
+                                        <ul>
                                             <li>
-                                                <a @click="jump('/info')">
+                                                <a @click="jump('/user/info')">
                                                     <i class="ti-user"></i>
-                                                    <span>个人信息</span>
+                                                    <span> 个人信息 </span>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a @click="jump('/settings')">
                                                     <i class="ti-settings"></i>
-                                                    <span>设置</span>
+                                                    <span> 我的设置 </span>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a @click="logout">
                                                     <i class="ti-power-off"></i>
-                                                    <span>登出</span>
+                                                    <span> 退出登录 </span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -77,11 +91,31 @@
 export default {
   data () {
     return {
-      isShow: false
+      infoShow: false,
+      messages: [],
+      messageClass: 'drop-down dropdown-menu dropdown-menu-right',
+      messageDropdownClass: 'dropdown dib',
+      infoClass: 'drop-down dropdown-profile dropdown-menu dropdown-menu-right',
+      infoDropdownClass: 'dropdown dib'
     }
   },
+  watch: {
+    $route () {
+      this.setDefault()
+    }
+  },
+  mounted () {
+    this.getLatestMessages()
+  },
   methods: {
+    setDefault () {
+      this.messageClass = 'drop-down dropdown-menu dropdown-menu-right'
+      this.messageDropdownClass = 'dropdown dib'
+      this.infoClass = 'drop-down dropdown-profile dropdown-menu dropdown-menu-right'
+      this.infoDropdownClass = 'dropdown dib'
+    },
     jump (curPath) {
+      this.setDefault()
       console.log(this.$route.path)
       if (!(this.$route.path === curPath)) {
         this.$router.push(curPath)
@@ -89,7 +123,67 @@ export default {
     },
     logout () {
       this.$store.dispatch('setIsLogin', false)
-      this.$router.push('/login')
+      this.$store.dispatch('setToken', '')
+      this.$swal({
+        title: '成功',
+        text: '退出成功！',
+        type: 'success'
+      })
+        .then(() => {
+          this.$router.push('/login')
+        })
+    },
+    changeMessageClass () {
+      if (this.messageClass === 'drop-down dropdown-menu dropdown-menu-right') {
+        this.messageClass = 'drop-down dropdown-menu dropdown-menu-right show'
+      } else {
+        this.messageClass = 'drop-down dropdown-menu dropdown-menu-right'
+      }
+      if (this.messageDropdownClass === 'dropdown dib') {
+        this.messageDropdownClass = 'dropdown dib show'
+      } else {
+        this.messageDropdownClass = 'dropdown dib'
+      }
+      this.infoClass = 'drop-down dropdown-profile dropdown-menu dropdown-menu-right'
+      this.infoDropdownClass = 'dropdown dib'
+    },
+    changeInfoClass () {
+      if (this.infoClass === 'drop-down dropdown-profile dropdown-menu dropdown-menu-right') {
+        this.infoClass = 'drop-down dropdown-profile dropdown-menu dropdown-menu-right show'
+      } else {
+        this.infoClass = 'drop-down dropdown-profile dropdown-menu dropdown-menu-right'
+      }
+      if (this.infoDropdownClass === 'dropdown dib') {
+        this.infoDropdownClass = 'dropdown dib show'
+      } else {
+        this.infoDropdownClass = 'dropdown dib'
+      }
+      this.messageClass = 'drop-down dropdown-menu dropdown-menu-right'
+      this.messageDropdownClass = 'dropdown dib'
+    },
+    getLatestMessages () {
+      this.$axios.get('/api/message/latest')
+        .then((response) => {
+          if (response.data.errno === 0) {
+            this.messages = response.data.data
+          } else {
+            let str = '发生了某些不知名的错误...'
+            this.$swal({
+              title: '提交异常！',
+              text: str,
+              type: 'error'
+            })
+          }
+        })
+        .catch((error) => {
+          console.log(error)// 打印服务端返回的数据(调试用)
+          let str = '发生了某些不知名的错误...\n' + error
+          this.$swal({
+            title: '提交异常！',
+            text: str,
+            type: 'error'
+          })
+        })
     }
   }
 }

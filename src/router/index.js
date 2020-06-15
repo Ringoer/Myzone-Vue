@@ -7,6 +7,7 @@ import course from '@/components/course'
 import courseAdd from '@/components/courseAdd'
 import courseEdit from '@/components/courseEdit'
 import dynamics from '@/components/dynamics'
+import message from '@/components/message'
 
 Vue.use(Router)
 
@@ -49,6 +50,16 @@ export default new Router({
       path: '/dynamics',
       name: 'dynamics',
       component: dynamics
+    },
+    {
+      path: '/message',
+      name: 'message',
+      component: message
+    },
+    {
+      path: '/message/:messageId',
+      name: 'messageView',
+      component: message
     }
   ]
 })

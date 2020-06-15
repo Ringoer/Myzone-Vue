@@ -7,42 +7,38 @@
                     <div class="logo">
                         <span style="text-align:center;color:white" v-text="message">Myzone</span>
                          <br/>
-                         <!-- <span style="text-align:center"> -->
-                            <!-- <span th:text="'第' + ${week} + '周'"></span> -->
-                            <!-- <span th:text="${weekday}"></span> -->
-                        <!-- </span> -->
                     </div>
                     <li class="label">菜单</li>
-                    <li>
+                    <li :class="(isIndex)?'active':''">
                         <a @click="jump('/')">
-                            <i class="ti-home"></i> 主页
+                            <i class="ti-home"></i> 我的主页
                         </a>
                     </li>
-                    <li>
-                      <a @click="jump('/score')">
+                    <li :class="(isCourse)?'active':''">
+                      <a @click="jump('/course')">
                         <i class="fa fa-file-text-o"></i>
-                        我的成绩
+                        课程一览
                       </a>
                     </li>
-                    <li>
+                    <li v-show="false">
                       <a @click="jump('/friend')">
                         <i class="fa fa-users"></i>
                         我的好友
                       </a>
                     </li>
-                    <li>
-                      <a @click="jump('/dynamics')">
+                    <li v-show="false">
+                      <a @click="jump('/friend/dynamics')">
                         <i class="fa fa-comments-o"></i>
                         好友动态
                       </a>
                     </li>
-                    <li>
-                      <a @click="jump('/message')">
+                    <li :class="(isDynamics)?'active':''">
+                      <a @click="jump('/dynamics')">
                         <i class="fa fa-comment-o"></i>
                         我的说说
                       </a>
                     </li>
-                    <li>
+                    <li v-show="false">
                       <a @click="change('course')">
                         <i class="ti-layout-grid4-alt"></i>
                         我的课程
@@ -51,17 +47,17 @@
                     </li>
                     <div>
                       <li>
-                        <a @click="jump('/course')" v-show="this.isCourse">
+                        <a @click="jump('/course')" v-show="false">
                         课程一览
                         </a>
                       </li>
                       <li>
-                        <a @click="jump('/course/add')" v-show="this.isCourse">
+                        <a @click="jump('/course/add')" v-show="false">
                         添加课程
                         </a>
                       </li>
                     </div>
-                    <li>
+                    <li v-show="false">
                       <a @click="jump('/setting')">
                         <i class="fa fa-cog"></i>
                         个人设置
@@ -78,12 +74,23 @@ export default {
   data () {
     return {
       message: 'Myzone',
-      isCourse: false
+      isIndex: true,
+      isCourse: false,
+      isDynamics: false
     }
   },
   watch: {
     $route () {
-      this.message = 'Hello ' + this.$store.state.username + '!'
+      this.isIndex = false
+      this.isCourse = false
+      this.isDynamics = false
+      if (this.$route.path === '/') {
+        this.isIndex = true
+      } else if (this.$route.path === '/course') {
+        this.isCourse = true
+      } else if (this.$route.path === '/dynamics') {
+        this.isDynamics = true
+      }
     }
   },
   methods: {

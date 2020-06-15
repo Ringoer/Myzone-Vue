@@ -77,19 +77,19 @@ export default {
           if (response.data.errno === 0) {
             this.$swal({
               title: '成功',
-              text: '登录成功！/rtoken = ' + response.data.data.token,
+              text: '登录成功！',
               type: 'success'
             })
               .then(() => {
                 this.$store.dispatch('setIsLogin', true)
+                this.$store.dispatch('setUserId', response.data.data.userId)
+                this.$store.dispatch('setToken', response.data.data.token)
 
                 this.$axios.get('/api/user/info', {
                   headers: {
                     'authorization': response.data.data.token
                   }}).then((resp) => {
-                  this.$store.dispatch('setUsername', resp.data.data.username)
-                  this.$store.dispatch('setUserId', response.data.data.userId)
-                  this.$store.dispatch('setToken', response.data.data.token)
+                  this.$store.dispatch('setUsername', resp.data.data.nickname)
                   this.$router.push('/')
                 })
               })
@@ -105,8 +105,8 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error)// 打印服务端返回的数据(调试用)
-          let str = '发生了某些不知名的错误...\n' + error
+          console.log(error)
+          let str = '服务器维护中，请联系管理员...'
           this.$swal({
             title: '提交异常！',
             text: str,
