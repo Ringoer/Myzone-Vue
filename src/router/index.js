@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import login from '@/components/login'
-import index from '@/components/index'
-import course from '@/components/course'
-import courseAdd from '@/components/courseAdd'
-import courseEdit from '@/components/courseEdit'
-import dynamics from '@/components/dynamics'
-import message from '@/components/message'
+import HelloWorld from '@/components/others/HelloWorld'
+import login from '@/components/others/login'
+import index from '@/components/others/index'
+import course from '@/components/course/course'
+import courseAdd from '@/components/course/courseAdd'
+import courseEdit from '@/components/course/courseEdit'
+import dynamics from '@/components/dynamics/dynamics'
+import message from '@/components/message/message'
+import messageAdd from '@/components/message/messageAdd'
+import messageView from '@/components/message/messageView'
 
 Vue.use(Router)
 
@@ -57,9 +59,14 @@ export default new Router({
       component: message
     },
     {
+      path: '/message/add',
+      name: 'messageAdd',
+      component: messageAdd
+    },
+    {
       path: '/message/:messageId',
       name: 'messageView',
-      component: message
+      component: messageView
     }
   ]
 })

@@ -5,20 +5,16 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    user: null,
     course: null,
-    username: '',
-    userId: '1',
     isLogin: false,
     token: '',
     widthOfSideBar: '15%',
     widthOfMain: '85%'
   },
   mutations: {
-    setUsername (state, username) {
-      state.username = username
-    },
-    setUserId (state, userId) {
-      state.userId = userId
+    setUser (state, user) {
+      state.user = user
     },
     setIsLogin (state, isLogin) {
       state.isLogin = isLogin
@@ -40,11 +36,8 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    setUsername (context, username) {
-      context.commit('setUsername', username)
-    },
-    setUserId (context, userId) {
-      context.commit('setUserId', userId)
+    setUser (context, user) {
+      context.commit('setUser', user)
     },
     setIsLogin (context, isLogin) {
       context.commit('setIsLogin', isLogin)

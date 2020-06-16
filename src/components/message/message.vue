@@ -12,13 +12,16 @@
                   <div class="card-title">
                     <h1 style="text-align:center">我的消息</h1>
                     <div class="col-lg-1" style="float:left">
-                      <a href="javascript:void(0)" @click="AllDelete" type="button" class="btn btn-primary btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-trash fa-lg"></i> 批量删除 </a>
+                      <a href="javascript:void(0)" @click="AllDelete" type="button" class="btn btn-primary btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-trash"></i> 批量删除 </a>
                     </div>
                     <div class="col-lg-1" style="float:left">
                       <a href="javascript:void(0)" @click="$router.push('/message/add')" type="button" class="btn btn-success btn-flat btn-addon m-b-10 m-l-5"><i class="ti-plus"></i> 发送消息 </a>
                     </div>
                     <div class="col-lg-1" style="float:left">
-                      <a href="javascript:void(0)" @click="readMessages" type="button" class="btn btn-info btn-flat btn-addon m-b-10 m-l-5"><i class="ti-minus"></i> 标为已读 </a>
+                      <a href="javascript:void(0)" @click="updateMessages(true)" type="button" class="btn btn-info btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-check"></i> 标为已读 </a>
+                    </div>
+                    <div class="col-lg-1" style="float:left">
+                      <a href="javascript:void(0)" @click="updateMessages(false)" type="button" class="btn btn-default btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-close"></i> 标为未读 </a>
                     </div>
                   </div>
                   <div class="card-body">
@@ -37,7 +40,7 @@
                           <td style="text-align:center">标题</td>
                           <td style="text-align:center">发件人</td>
                           <td style="text-align:center">发送时间</td>
-                          <td style="text-align:center">删除</td>
+                          <td style="text-align:center">未读/已读</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -58,17 +61,16 @@
                             </a>
                           </td>
                           <td style="text-align:center">
-                            <span v-if="message.beRead">{{message.fromId}}</span>
-                            <b v-else>{{message.fromId}}</b>
+                            <span v-if="message.beRead">{{message.fromNickname}}</span>
+                            <b v-else>{{message.fromNickname}}</b>
                           </td>
                           <td style="text-align:center">
-                            <span v-if="message.beRead">{{message.sendTime}}</span>
-                            <b v-else>{{message.sendTime}}</b>
+                            <span v-if="message.beRead">{{message.sendTime.replace('T', ' ')}}</span>
+                            <b v-else>{{message.sendTime.replace('T', ' ')}}</b>
                           </td>
                           <td style="text-align:center">
-                            <a href="javascript:void(0)" @click="MyDelete(message)">
-                              <i class="fa fa-trash fa-lg"></i>
-                            </a>
+                            <span v-if="message.beRead">已读</span>
+                            <b v-else>未读</b>
                           </td>
                         </tr>
                         </tbody>
@@ -160,7 +162,8 @@ export default {
           })
         })
     },
-    readMessages () {
+    updateMessages (isRead) {
+      var str = (isRead) ? '已读' : '未读'
       var checkboxs = document.getElementsByName('selectedMessage')
       var i = 0
       var selectedMessageIds = []
@@ -170,8 +173,8 @@ export default {
         }
       }
       this.$swal({
-        title: '确定要标为已读吗？',
-        text: '此操作不可撤销',
+        title: '确定',
+        text: '确定要标为' + str + '吗？',
         type: 'warning',
         showCancelButton: true,
         cancelButtonText: '取消',
@@ -183,11 +186,11 @@ export default {
           if (isConfirm.value == null) {
             return 0
           }
-          this.$axios.put('/api/message', {data: selectedMessageIds})
+          this.$axios.put('/api/message', {ids: selectedMessageIds, isRead: isRead})
             .then((response) => {
               this.$swal({
                 title: '成功',
-                text: '标为已读成功！',
+                text: '标为' + str + '成功！',
                 type: 'success'
               })
                 .then(() => {
@@ -250,49 +253,6 @@ export default {
             })
         })
     },
-    MyDelete (message) {
-      var messageType = message.type
-      var messageTopic = message.topic
-      var str = '[' + messageType + ']' + messageTopic
-      this.$swal({
-        title: '确定要删除吗？',
-        text: str,
-        type: 'warning',
-        showCancelButton: true,
-        cancelButtonText: '取消',
-        confirmButtonColor: '#DD6B55',
-        confirmButtonText: '确定'
-      })
-        .then((isConfirm) => {
-          console.log(isConfirm)
-          if (isConfirm.value == null) {
-            return 0
-          }
-          let selectedMessage = {
-            id: message.id
-          }
-          this.$axios.delete('/api/message', {data: selectedMessage})
-            .then((response) => {
-              this.$swal({
-                title: '成功',
-                text: '删除' + str + '成功！',
-                type: 'success'
-              })
-                .then(() => {
-                  this.reload()
-                })
-            })
-            .catch((error) => {
-              console.log(error)// 打印服务端返回的数据(调试用)
-              let str = '发生了某些不知名的错误...\n' + error
-              this.$swal({
-                title: '提交异常！',
-                text: str,
-                type: 'error'
-              })
-            })
-        })
-    },
     MyError (str) {
       this.$swal({
         title: '提交异常！',
@@ -337,11 +297,11 @@ export default {
 </script>
 
 <style scoped>
-  @import '../assets/css/lib/font-awesome.min.css';
-  @import '../assets/css/lib/themify-icons.css';
-  @import '../assets/css/lib/menubar/sidebar.css';
-  @import '../assets/css/lib/bootstrap.min.css';
-  @import '../assets/css/lib/helper.css';
-  @import '../assets/css/style.css';
-  @import '../assets/css/lib/sweetalert/sweetalert.css';
+  @import '../../assets/css/lib/font-awesome.min.css';
+  @import '../../assets/css/lib/themify-icons.css';
+  @import '../../assets/css/lib/menubar/sidebar.css';
+  @import '../../assets/css/lib/bootstrap.min.css';
+  @import '../../assets/css/lib/helper.css';
+  @import '../../assets/css/style.css';
+  @import '../../assets/css/lib/sweetalert/sweetalert.css';
 </style>

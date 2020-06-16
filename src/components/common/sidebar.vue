@@ -20,6 +20,12 @@
                         课程一览
                       </a>
                     </li>
+                    <li :class="(isMessage)?'active':''">
+                      <a @click="jump('/message')">
+                        <i class="fa fa-list-ul"></i>
+                        消息一览
+                      </a>
+                    </li>
                     <li v-show="false">
                       <a @click="jump('/friend')">
                         <i class="fa fa-users"></i>
@@ -76,6 +82,7 @@ export default {
       message: 'Myzone',
       isIndex: true,
       isCourse: false,
+      isMessage: false,
       isDynamics: false
     }
   },
@@ -83,11 +90,14 @@ export default {
     $route () {
       this.isIndex = false
       this.isCourse = false
+      this.isMessage = false
       this.isDynamics = false
       if (this.$route.path === '/') {
         this.isIndex = true
       } else if (this.$route.path === '/course') {
         this.isCourse = true
+      } else if (this.$route.path === '/message') {
+        this.isMessage = true
       } else if (this.$route.path === '/dynamics') {
         this.isDynamics = true
       }

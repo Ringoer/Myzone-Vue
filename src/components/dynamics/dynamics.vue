@@ -31,7 +31,7 @@
                           <td style="text-align:center">{{adynamics.userId}}</td>
                           <td style="text-align:center">{{adynamics.dynamics}}</td>
                           <td style="text-align:center">{{adynamics.favorited}}</td>
-                          <td style="text-align:center">{{adynamics.gmtCreate}}</td>
+                          <td style="text-align:center">{{adynamics.gmtCreate.replace('T', ' ')}}</td>
                           <td style="text-align:center">
                             <a href="javascript:void(0)" @click="MyDelete(adynamics)">
                               <i class="fa fa-trash fa-lg"></i>
@@ -293,11 +293,11 @@ export default {
 </script>
 
 <style scoped>
-  @import '../assets/css/lib/font-awesome.min.css';
-  @import '../assets/css/lib/themify-icons.css';
-  @import '../assets/css/lib/menubar/sidebar.css';
-  @import '../assets/css/lib/bootstrap.min.css';
-  @import '../assets/css/lib/helper.css';
-  @import '../assets/css/style.css';
-  @import '../assets/css/lib/sweetalert/sweetalert.css';
+  @import '../../assets/css/lib/font-awesome.min.css';
+  @import '../../assets/css/lib/themify-icons.css';
+  @import '../../assets/css/lib/menubar/sidebar.css';
+  @import '../../assets/css/lib/bootstrap.min.css';
+  @import '../../assets/css/lib/helper.css';
+  @import '../../assets/css/style.css';
+  @import '../../assets/css/lib/sweetalert/sweetalert.css';
 </style>

@@ -50,7 +50,7 @@
                         </div>
                         <div :class="infoDropdownClass">
                             <div class="header-icon" data-toggle="dropdown" @click="changeInfoClass">
-                                <span class="user-avatar" v-text="this.$store.state.username">
+                                <span class="user-avatar" v-text="this.$store.state.user.nickname">
                                   user
                                   <i class="ti-angle-down f-s-10"></i>
                                 </span>
@@ -104,9 +104,6 @@ export default {
       this.setDefault()
     }
   },
-  mounted () {
-    this.getLatestMessages()
-  },
   methods: {
     setDefault () {
       this.messageClass = 'drop-down dropdown-menu dropdown-menu-right'
@@ -134,6 +131,7 @@ export default {
         })
     },
     changeMessageClass () {
+      this.getLatestMessages()
       if (this.messageClass === 'drop-down dropdown-menu dropdown-menu-right') {
         this.messageClass = 'drop-down dropdown-menu dropdown-menu-right show'
       } else {

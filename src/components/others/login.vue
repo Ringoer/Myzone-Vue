@@ -82,14 +82,13 @@ export default {
             })
               .then(() => {
                 this.$store.dispatch('setIsLogin', true)
-                this.$store.dispatch('setUserId', response.data.data.userId)
                 this.$store.dispatch('setToken', response.data.data.token)
 
                 this.$axios.get('/api/user/info', {
                   headers: {
                     'authorization': response.data.data.token
                   }}).then((resp) => {
-                  this.$store.dispatch('setUsername', resp.data.data.nickname)
+                  this.$store.dispatch('setUser', resp.data.data)
                   this.$router.push('/')
                 })
               })
@@ -119,8 +118,8 @@ export default {
 </script>
 
 <style scoped>
-    @import '../assets/css/lib/font-awesome.min.css';
-    @import '../assets/css/lib/themify-icons.css';
+    @import '../../assets/css/lib/font-awesome.min.css';
+    @import '../../assets/css/lib/themify-icons.css';
 
-    @import '../assets/css/lib/login-custom.css';
+    @import '../../assets/css/lib/login-custom.css';
 </style>

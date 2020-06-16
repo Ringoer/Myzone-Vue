@@ -115,6 +115,7 @@ export default {
   inject: ['reload'],
   data () {
     return {
+      course: this.$store.state.course,
       courseName: '',
       teacher: '',
       credit: 0,
@@ -124,6 +125,21 @@ export default {
       beginTime: 1,
       endTime: 2,
       date: ''
+    }
+  },
+  mounted () {
+    if (this.course == null) {
+      this.$router.push('/')
+    } else {
+      this.courseName = this.course.courseName
+      this.teacher = this.course.teacher
+      this.credit = this.course.credit
+      this.place = this.course.place
+      this.weekday = this.course.weekday
+      this.isOddWeek = this.course.isOddWeek
+      this.beginTime = this.course.beginTime
+      this.endTime = this.course.endTime
+      this.date = this.course.date
     }
   },
   watch: {
@@ -174,6 +190,8 @@ export default {
             return 0
           }
           let courseData = {
+            id: this.course.id,
+            userId: this.course.userId,
             courseName: this.courseName,
             teacher: this.teacher,
             credit: this.credit,
@@ -184,17 +202,18 @@ export default {
             endTime: this.endTime,
             date: this.date
           }
-          this.$axios.post('/api/course', courseData)
+          this.$axios.put('/api/course', courseData)
             .then((response) => {
               if (response.data.errno === 0) {
-                let message = '添加 ' + this.courseName + ' 课程成功！\n新的ID为 ' + response.data.data
+                let message = '编辑 ' + this.courseName + ' 课程成功！'
                 this.$swal({
                   title: '成功',
                   text: message,
                   type: 'success'
                 })
                   .then(() => {
-                    this.reload()
+                    this.$store.dispatch('setCourse', null)
+                    this.$router.push('/course')
                   })
               } else {
                 this.$swal({
@@ -274,11 +293,11 @@ export default {
 </script>
 
 <style scoped>
-  @import '../assets/css/lib/font-awesome.min.css';
-  @import '../assets/css/lib/themify-icons.css';
-  @import '../assets/css/lib/menubar/sidebar.css';
-  @import '../assets/css/lib/bootstrap.min.css';
-  @import '../assets/css/lib/helper.css';
-  @import '../assets/css/style.css';
-  @import '../assets/css/lib/sweetalert/sweetalert.css';
+  @import '../../assets/css/lib/font-awesome.min.css';
+  @import '../../assets/css/lib/themify-icons.css';
+  @import '../../assets/css/lib/menubar/sidebar.css';
+  @import '../../assets/css/lib/bootstrap.min.css';
+  @import '../../assets/css/lib/helper.css';
+  @import '../../assets/css/style.css';
+  @import '../../assets/css/lib/sweetalert/sweetalert.css';
 </style>
