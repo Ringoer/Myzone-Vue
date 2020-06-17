@@ -105,28 +105,27 @@ export default {
     this.getCourses()
   },
   methods: {
+    MyError (str) {
+      this.$swal({
+        title: '提交异常！',
+        text: str,
+        type: 'error'
+      })
+    },
     getCourses () {
       this.$axios.get('/api/course', {params: {q: this.queryString, p: this.page}})
         .then((response) => {
           if (response.data.errno === 0) {
             this.courses = response.data.data
           } else {
-            let str = '发生了某些不知名的错误...'
-            this.$swal({
-              title: '提交异常！',
-              text: str,
-              type: 'error'
-            })
+            let str = response.data.errmsg
+            this.MyError(str)
           }
         })
         .catch((error) => {
           console.log(error)// 打印服务端返回的数据(调试用)
-          let str = '发生了某些不知名的错误...\n' + error
-          this.$swal({
-            title: '提交异常！',
-            text: str,
-            type: 'error'
-          })
+          let str = '课程系统正在维护中...\n' + error
+          this.MyError(str)
         })
     },
     postCourse () {
@@ -163,23 +162,24 @@ export default {
           }
           this.$axios.delete('/api/course', {data: selectdCourse})
             .then((response) => {
-              this.$swal({
-                title: '成功',
-                text: '删除id为 ' + courseId + ' 的课程成功！',
-                type: 'success'
-              })
-                .then(() => {
-                  this.reload()
+              if (response.data.errno === 0) {
+                this.$swal({
+                  title: '成功',
+                  text: '删除id为 ' + courseId + ' 的课程成功！',
+                  type: 'success'
                 })
+                  .then(() => {
+                    this.reload()
+                  })
+              } else {
+                let str = response.data.errmsg
+                this.MyError(str)
+              }
             })
             .catch((error) => {
               console.log(error)// 打印服务端返回的数据(调试用)
-              let str = '发生了某些不知名的错误...\n' + error
-              this.$swal({
-                title: '提交异常！',
-                text: str,
-                type: 'error'
-              })
+              let str = '课程系统正在维护中...\n' + error
+              this.MyError(str)
             })
         })
     },
@@ -209,11 +209,7 @@ export default {
       var n = Math.floor(Number(this.queryPage))
       if (!(n !== Infinity && String(n) === this.queryPage && n > 0)) {
         let str = '跳转页码不合法！'
-        this.$swal({
-          title: '提交异常！',
-          text: str,
-          type: 'error'
-        })
+        this.MyError(str)
       } else {
         this.MyChangePage(Number(this.queryPage))
       }

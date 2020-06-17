@@ -99,7 +99,8 @@ export default {
               type: 'error'
             })
               .then(() => {
-                location.href = '/'
+                this.username = ''
+                this.password = ''
               })
           }
         })

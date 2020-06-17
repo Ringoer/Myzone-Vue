@@ -37,16 +37,32 @@
                               类型
                             </a>
                           </td>
-                          <td style="text-align:center">标题</td>
-                          <td style="text-align:center">发件人</td>
-                          <td style="text-align:center">发送时间</td>
-                          <td style="text-align:center">未读/已读</td>
+                          <td style="text-align:center">
+                            <a href="javascript:void(0)" @click="MySearchByType('')">
+                              标题
+                            </a>
+                          </td>
+                          <td style="text-align:center">
+                            <a href="javascript:void(0)" @click="MySearchByType('')">
+                              发件人
+                            </a>
+                          </td>
+                          <td style="text-align:center">
+                            <a href="javascript:void(0)" @click="MySearchByType('')">
+                              发送时间
+                            </a>
+                          </td>
+                          <td style="text-align:center">
+                            <a href="javascript:void(0)" @click="MySearchByType('')">
+                              未读/已读
+                            </a>
+                          </td>
                         </tr>
                         </thead>
                         <tbody>
                         <tr v-for="(message, index) in messages" :key="index">
                           <td style="text-align:center">
-                            <input type="checkbox" name="selectedMessage">
+                            <input type="checkbox" name="selectedMessage" @click="changeSelectedCount">
                           </td>
                           <td style="text-align:center">
                             <a href="javascript:void(0)" @click="MySearchByType(message.type)">
@@ -61,16 +77,20 @@
                             </a>
                           </td>
                           <td style="text-align:center">
-                            <span v-if="message.beRead">{{message.fromNickname}}</span>
-                            <b v-else>{{message.fromNickname}}</b>
+                            <a href="javascript:void(0)" @click="MySearchByFromId(message.fromId)">
+                              <span v-if="message.beRead">{{message.fromNickname}}</span>
+                              <b v-else>{{message.fromNickname}}</b>
+                            </a>
                           </td>
                           <td style="text-align:center">
                             <span v-if="message.beRead">{{message.sendTime.replace('T', ' ')}}</span>
                             <b v-else>{{message.sendTime.replace('T', ' ')}}</b>
                           </td>
                           <td style="text-align:center">
-                            <span v-if="message.beRead">已读</span>
-                            <b v-else>未读</b>
+                            <a href="javascript:void(0)" @click="MySearchByBeRead(message.beRead)">
+                              <span v-if="message.beRead">已读</span>
+                              <b v-else>未读</b>
+                            </a>
                           </td>
                         </tr>
                         </tbody>
@@ -115,51 +135,68 @@ export default {
     return {
       messages: [],
       message: null,
+      queryUrl: '/api/message',
       queryString: '',
       queryPage: '',
       page: 1,
-      tabs: [1, 2, 3, 4, 5]
+      tabs: [1, 2, 3, 4, 5],
+      selectedCount: 0
+    }
+  },
+  watch: {
+    selectedCount () {
+      var obj = document.getElementById('selectAll')
+      if (this.selectedCount === this.messages.length) {
+        if (!obj.checked) {
+          obj.checked = true
+        }
+      } else {
+        if (obj.checked) {
+          obj.checked = false
+        }
+      }
     }
   },
   mounted () {
     this.getMessages()
   },
   methods: {
+    changeSelectedCount (even) {
+      if (even.target.checked) {
+        this.selectedCount++
+      } else {
+        this.selectedCount--
+      }
+    },
     selectAll () {
       var obj = document.getElementById('selectAll')
       var checkboxs = document.getElementsByName('selectedMessage')
       if (obj.checked) {
+        this.selectedCount = this.messages.length
         for (var i = 0; i < checkboxs.length; i++) {
           checkboxs[i].checked = true
         }
       } else {
+        this.selectedCount = 0
         for (i = 0; i < checkboxs.length; i++) {
           checkboxs[i].checked = false
         }
       }
     },
     getMessages () {
-      this.$axios.get('/api/message', {params: {q: this.queryString, p: this.page}})
+      this.$axios.get(this.queryUrl, {params: {q: this.queryString, p: this.page}})
         .then((response) => {
           if (response.data.errno === 0) {
             this.messages = response.data.data
           } else {
-            let str = '发生了某些不知名的错误...'
-            this.$swal({
-              title: '提交异常！',
-              text: str,
-              type: 'error'
-            })
+            let str = response.data.errmsg
+            this.MyError(str)
           }
         })
         .catch((error) => {
           console.log(error)// 打印服务端返回的数据(调试用)
-          let str = '发生了某些不知名的错误...\n' + error
-          this.$swal({
-            title: '提交异常！',
-            text: str,
-            type: 'error'
-          })
+          let str = '消息系统正在维护中...\n' + error
+          this.MyError(str)
         })
     },
     updateMessages (isRead) {
@@ -188,23 +225,24 @@ export default {
           }
           this.$axios.put('/api/message', {ids: selectedMessageIds, isRead: isRead})
             .then((response) => {
-              this.$swal({
-                title: '成功',
-                text: '标为' + str + '成功！',
-                type: 'success'
-              })
-                .then(() => {
-                  this.reload()
+              if (response.data.errno === 0) {
+                this.$swal({
+                  title: '成功',
+                  text: '标为' + str + '成功！',
+                  type: 'success'
                 })
+                  .then(() => {
+                    this.reload()
+                  })
+              } else {
+                let str = response.data.errmsg
+                this.MyError(str)
+              }
             })
             .catch((error) => {
               console.log(error)// 打印服务端返回的数据(调试用)
-              let str = '发生了某些不知名的错误...\n' + error
-              this.$swal({
-                title: '提交异常！',
-                text: str,
-                type: 'error'
-              })
+              let str = '消息系统正在维护中...\n' + error
+              this.MyError(str)
             })
         })
     },
@@ -244,12 +282,8 @@ export default {
             })
             .catch((error) => {
               console.log(error)// 打印服务端返回的数据(调试用)
-              let str = '发生了某些不知名的错误...\n' + error
-              this.$swal({
-                title: '提交异常！',
-                text: str,
-                type: 'error'
-              })
+              let str = '消息系统正在维护中...\n' + error
+              this.MyError(str)
             })
         })
     },
@@ -261,7 +295,18 @@ export default {
       })
     },
     MySearchByType (type) {
+      this.queryUrl = '/api/message/type'
       this.queryString = type
+      this.getMessages()
+    },
+    MySearchByFromId (fromId) {
+      this.queryUrl = '/api/message/fromid'
+      this.queryString = fromId
+      this.getMessages()
+    },
+    MySearchByBeRead (isRead) {
+      this.queryUrl = '/api/message/beread'
+      this.queryString = isRead
       this.getMessages()
     },
     MyChangePage (tab) {
@@ -283,11 +328,7 @@ export default {
       var n = Math.floor(Number(this.queryPage))
       if (!(n !== Infinity && String(n) === this.queryPage && n > 0)) {
         let str = '跳转页码不合法！'
-        this.$swal({
-          title: '提交异常！',
-          text: str,
-          type: 'error'
-        })
+        this.MyError(str)
       } else {
         this.MyChangePage(Number(this.queryPage))
       }

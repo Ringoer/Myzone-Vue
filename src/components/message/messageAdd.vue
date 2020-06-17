@@ -129,19 +129,13 @@ export default {
                     this.reload()
                   })
               } else {
-                this.$swal({
-                  title: '失败',
-                  text: response.data.errmsg,
-                  type: 'error'
-                })
-                  .then(() => {
-                    this.reload()
-                  })
+                let str = response.data.errmsg
+                this.MyError(str)
               }
             })
             .catch((error) => {
               console.log(error)// 打印服务端返回的数据(调试用)
-              let str = '发生了某些不知名的错误...\r' + error
+              let str = '消息系统正在维护中...\r' + error
               this.MyError(str)
             })
         })

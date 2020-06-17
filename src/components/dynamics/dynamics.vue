@@ -7,6 +7,31 @@
         <div class="container-fluid">
           <section id="main-content">
             <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-title">
+                            <h1 style="text-align:center">新动态</h1>
+                        </div>
+                        <div class="card-body">
+                            <div class="basic-elements">
+                                <form id="form" method="post">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-group">
+                                                <textarea id="dynamics" name="dynamics" v-model="dynamics" class="form-control" style="height: 250px" placeholder=""></textarea>
+                                            </div>
+                                            <br/>
+                                            <button type="button" class="btn btn-danger btn-rounded m-b-10 m-l-5" style="width:48%" @click="MyClear"> 重置 </button>
+                                            <button id="button" type="button" class="btn btn-primary btn-rounded m-b-10 m-l-5" style="width:48%;float:right" @click="MyCheck"> 发送 </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
               <div class="col-lg-12">
                 <div class="card">
                   <div class="card-title">
@@ -29,7 +54,9 @@
                         <tr v-for="(adynamics, index) in dynamicss" :key="index">
                           <td style="text-align:center">{{adynamics.id}}</td>
                           <td style="text-align:center">{{adynamics.userId}}</td>
-                          <td style="text-align:center">{{adynamics.dynamics}}</td>
+                          <td style="text-align:center">
+                            <p v-html="adynamics.dynamics"></p>
+                          </td>
                           <td style="text-align:center">{{adynamics.favorited}}</td>
                           <td style="text-align:center">{{adynamics.gmtCreate.replace('T', ' ')}}</td>
                           <td style="text-align:center">
@@ -65,31 +92,6 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-title">
-                            <h1 style="text-align:center">新动态</h1>
-                        </div>
-                        <div class="card-body">
-                            <div class="basic-elements">
-                                <form id="form" method="post">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="form-group">
-                                                <input id="dynamics" name="dynamics" v-model="dynamics" type="text" class="form-control" placeholder="">
-                                            </div>
-                                            <br/>
-                                            <button type="button" class="btn btn-danger btn-rounded m-b-10 m-l-5" style="width:48%" @click="MyClear"> 重置 </button>
-                                            <button id="button" type="button" class="btn btn-primary btn-rounded m-b-10 m-l-5" style="width:48%;float:right" @click="MyCheck"> 发送 </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!-- <div th:replace="Common/footer::footer"></div> -->
           </section>
         </div>
@@ -120,22 +122,14 @@ export default {
           if (response.data.errno === 0) {
             this.dynamicss = response.data.data
           } else {
-            let str = '发生了某些不知名的错误...'
-            this.$swal({
-              title: '提交异常！',
-              text: str,
-              type: 'error'
-            })
+            let str = response.data.errmsg
+            this.MyError(str)
           }
         })
         .catch((error) => {
           console.log(error)// 打印服务端返回的数据(调试用)
-          let str = '发生了某些不知名的错误...\n' + error
-          this.$swal({
-            title: '提交异常！',
-            text: str,
-            type: 'error'
-          })
+          let str = '动态系统正在维护中...\n' + error
+          this.MyError(str)
         })
     },
     postDynamics () {
@@ -143,16 +137,7 @@ export default {
     },
     MyDelete (adynamics) {
       var dynamicsId = adynamics.id
-      var dynamicsUserId = adynamics.userId
-      var dynamicsDynamics = adynamics.dynamics
-      var dynamicsFavorited = adynamics.favorited
-      var dynamicsCreate = adynamics.gmtCreate
-      var str = '动态信息' +
-              '\n动态ID：' + dynamicsId +
-              '\n发布者：' + dynamicsUserId +
-              '\n动态内容：' + dynamicsDynamics +
-              '\n点赞数量：' + dynamicsFavorited +
-              '\n发布时间：' + dynamicsCreate
+      var str = '动态ID：' + dynamicsId
       this.$swal({
         title: '确定要删除吗？',
         text: str,
@@ -172,23 +157,24 @@ export default {
           }
           this.$axios.delete('/api/dynamics', {data: selectdDynamics})
             .then((response) => {
-              this.$swal({
-                title: '成功',
-                text: '删除id为 ' + dynamicsId + ' 的动态成功！',
-                type: 'success'
-              })
-                .then(() => {
-                  this.reload()
+              if (response.data.errno === 0) {
+                this.$swal({
+                  title: '成功',
+                  text: '删除id为 ' + dynamicsId + ' 的动态成功！',
+                  type: 'success'
                 })
+                  .then(() => {
+                    this.reload()
+                  })
+              } else {
+                let str = response.data.errmsg
+                this.MyError(str)
+              }
             })
             .catch((error) => {
               console.log(error)// 打印服务端返回的数据(调试用)
-              let str = '发生了某些不知名的错误...\n' + error
-              this.$swal({
-                title: '提交异常！',
-                text: str,
-                type: 'error'
-              })
+              let str = '动态系统正在维护中...\n' + error
+              this.MyError(str)
             })
         })
     },
@@ -217,7 +203,7 @@ export default {
             return 0
           }
           let dynamicsData = {
-            dynamics: this.dynamics
+            dynamics: this.dynamics.replace(/[\r\n]/g, '<br/>')
           }
           this.$axios.post('/api/dynamics', dynamicsData)
             .then((response) => {
@@ -232,19 +218,13 @@ export default {
                     this.reload()
                   })
               } else {
-                this.$swal({
-                  title: '失败',
-                  text: response.data.errmsg,
-                  type: 'error'
-                })
-                  .then(() => {
-                    this.reload()
-                  })
+                let str = response.data.errmsg
+                this.MyError(str)
               }
             })
             .catch((error) => {
               console.log(error)// 打印服务端返回的数据(调试用)
-              let str = '发生了某些不知名的错误...\r' + error
+              let str = '动态系统正在维护中...\r' + error
               this.MyError(str)
             })
         })
@@ -279,11 +259,7 @@ export default {
       var n = Math.floor(Number(this.queryPage))
       if (!(n !== Infinity && String(n) === this.queryPage && n > 0)) {
         let str = '跳转页码不合法！'
-        this.$swal({
-          title: '提交异常！',
-          text: str,
-          type: 'error'
-        })
+        this.MyError(str)
       } else {
         this.MyChangePage(Number(this.queryPage))
       }

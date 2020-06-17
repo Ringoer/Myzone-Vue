@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/others/HelloWorld'
 import login from '@/components/others/login'
 import index from '@/components/others/index'
+import userInfo from '@/components/others/userInfo'
 import course from '@/components/course/course'
 import courseAdd from '@/components/course/courseAdd'
 import courseEdit from '@/components/course/courseEdit'
@@ -32,6 +33,11 @@ export default new Router({
       path: '/',
       name: 'index',
       component: index
+    },
+    {
+      path: '/user/info',
+      name: 'userInfo',
+      component: userInfo
     },
     {
       path: '/course',

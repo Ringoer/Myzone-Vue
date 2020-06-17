@@ -216,14 +216,8 @@ export default {
                     this.$router.push('/course')
                   })
               } else {
-                this.$swal({
-                  title: '失败',
-                  text: response.data.errmsg,
-                  type: 'error'
-                })
-                  .then(() => {
-                    this.reload()
-                  })
+                let str = response.data.errmsg
+                this.MyError(str)
               }
             })
             .catch((error) => {

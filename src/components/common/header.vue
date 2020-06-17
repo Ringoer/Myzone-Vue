@@ -38,16 +38,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="dropdown dib" v-show="false">
-                            <div class="header-icon" data-toggle="dropdown">
-                                <i class="ti-email"></i>
-                                <div class="drop-down dropdown-menu dropdown-menu-right">
-                                    <div class="dropdown-content-heading">
-                                        <span class="text-left">Email</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div :class="infoDropdownClass">
                             <div class="header-icon" data-toggle="dropdown" @click="changeInfoClass">
                                 <span class="user-avatar" v-text="this.$store.state.user.nickname">
@@ -63,7 +53,7 @@
                                                     <span> 个人信息 </span>
                                                 </a>
                                             </li>
-                                            <li>
+                                            <li v-show="false">
                                                 <a @click="jump('/settings')">
                                                     <i class="ti-settings"></i>
                                                     <span> 我的设置 </span>

@@ -14,6 +14,12 @@
                             <i class="ti-home"></i> 我的主页
                         </a>
                     </li>
+                    <li :class="(isUserInfo)?'active':''">
+                      <a @click="jump('/user/info')">
+                        <i class="ti-user"></i>
+                        个人信息
+                      </a>
+                    </li>
                     <li :class="(isCourse)?'active':''">
                       <a @click="jump('/course')">
                         <i class="fa fa-file-text-o"></i>
@@ -81,6 +87,7 @@ export default {
     return {
       message: 'Myzone',
       isIndex: true,
+      isUserInfo: false,
       isCourse: false,
       isMessage: false,
       isDynamics: false
@@ -89,11 +96,14 @@ export default {
   watch: {
     $route () {
       this.isIndex = false
+      this.isUserInfo = false
       this.isCourse = false
       this.isMessage = false
       this.isDynamics = false
       if (this.$route.path === '/') {
         this.isIndex = true
+      } else if (this.$route.path === '/user/info') {
+        this.isUserInfo = true
       } else if (this.$route.path === '/course') {
         this.isCourse = true
       } else if (this.$route.path === '/message') {
