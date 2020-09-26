@@ -293,8 +293,8 @@ color:rgb(255, 255, 255);
 }
 .u-btn-primary, .ui-dialog-buttonpane .ui-button:first-child {
 color: #ffffff;
-background-color: #167ab6;
-border-color: #136b9f;
+background-color: rgb(0,161,214);
+border: 1px solid #0381aa;
 }
 .u-btn-primary:hover,
 .u-btn-primary.focus,
@@ -305,7 +305,7 @@ border-color: #136b9f;
 .ui-dialog-buttonpane .ui-button:first-child:active,
 .ui-dialog-buttonpane .ui-button:first-child.active {
 color: #fff;
-background-color: #136b9f;
+background-color: rgb(0,181,229);
 border-color: #0f557f;
 }
 .u-btn-primary.disabled,
@@ -324,18 +324,18 @@ border-color: #057ab8;
 }
 .u-btn-default {
 color: #555;
-background-color: #f5f6f7;
-border-color: #d9d9d9;
+background-color: #ffffff;
+border: 1px solid #ccc;
 }
 .u-btn-default:hover {
-background-color: #f5f6f7;
+background-color:rgb(247,247,247);
 border-color: #b2b2b2;
 }
 .u-btn-default.focus,
 .u-btn-default:active,
 .u-btn-default.active {
 color: #555;
-background-color: #e8e9eb;
+background-color: rgb(247,247,247);
 border-color: #b2b2b2;
 }
 .u-input {
@@ -734,7 +734,7 @@ line-height: 46px;
 height: 46px;
 }
 .u-form .u-form-item-2 .submit {
-width: 100%;
+width: 45%;
 font-weight: bold;
 height: 46px;
 font-size: 16px;
@@ -1230,3 +1230,10 @@ height: 48px;
 }
 }
 
+.reg-login {
+	color: #b2b2b2;
+}
+
+.reg-login:hover {
+	color: palevioletred;
+}

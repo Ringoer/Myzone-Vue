@@ -2,6 +2,8 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <router-view v-if="!this.$store.state.isLogin" name="login"/>
+    <router-view v-if="!this.$store.state.isLogin" name="register"/>
+    <router-view v-if="this.$route.path.endsWith('verify')" name="verify"/>
     <sideBar v-if="this.$store.state.isLogin" id="sideBar" :style="{width:this.$store.state.widthOfSideBar}" style="display:inline-block"></sideBar>
     <div :style="{width:this.$store.state.widthOfMain}" style="display:inline-block;float:right;-webkit-transition:width 0.5s">
       <sideHeader style="width:100%" v-if="this.$store.state.isLogin"></sideHeader>
@@ -41,7 +43,19 @@ export default {
     },
     isLogin () {
       if (!this.$store.state.isLogin) {
-        this.$router.replace('/login')
+        let localToken = localStorage.getItem('token')
+        if (localToken) {
+          this.$axios.get('/api/user/info', {
+            headers: {
+              'authorization': localToken
+            }}).then((resp) => {
+            this.$store.dispatch('setUser', resp.data.data)
+            this.$store.dispatch('setIsLogin', true)
+            this.$store.dispatch('setToken', localToken)
+          })
+        } else if (this.$route.path !== '/register') {
+          this.$router.replace('/login')
+        }
       }
     },
     reload () {

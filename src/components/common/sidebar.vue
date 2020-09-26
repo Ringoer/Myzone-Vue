@@ -93,6 +93,24 @@ export default {
       isDynamics: false
     }
   },
+  mounted () {
+    this.isIndex = false
+    this.isUserInfo = false
+    this.isCourse = false
+    this.isMessage = false
+    this.isDynamics = false
+    if (this.$route.path === '/') {
+      this.isIndex = true
+    } else if (this.$route.path === '/user/info') {
+      this.isUserInfo = true
+    } else if (this.$route.path === '/course') {
+      this.isCourse = true
+    } else if (this.$route.path === '/message') {
+      this.isMessage = true
+    } else if (this.$route.path === '/dynamics') {
+      this.isDynamics = true
+    }
+  },
   watch: {
     $route () {
       this.isIndex = false

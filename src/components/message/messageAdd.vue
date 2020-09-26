@@ -20,7 +20,7 @@
                                                         <div class="form-group" style="height: 90%">
                                                             <label> 选择好友 </label>
                                                             <select id="target" name="target" v-model="target" multiple  class="form-control" style="height: 100%">
-                                                                <option v-for="(user, index) in friends" :key="index" :value="user.id" @click="select">{{user.username}}</option>
+                                                                <option v-for="(user, index) in friends" :key="index" :value="user.id" @click="select">{{user.nickname + ' &lt; ' + user.username + ' &gt;'}}</option>
                                                             </select>
                                                         </div>
                                                     </div>

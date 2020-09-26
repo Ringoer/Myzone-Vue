@@ -111,6 +111,7 @@ export default {
     logout () {
       this.$store.dispatch('setIsLogin', false)
       this.$store.dispatch('setToken', '')
+      localStorage.removeItem('token')
       this.$swal({
         title: '成功',
         text: '退出成功！',

@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/others/HelloWorld'
 import login from '@/components/others/login'
+import register from '@/components/others/register'
+import verify from '@/components/others/verify'
 import index from '@/components/others/index'
 import userInfo from '@/components/others/userInfo'
 import course from '@/components/course/course'
@@ -23,10 +25,24 @@ export default new Router({
       component: HelloWorld
     },
     {
+      path: '*/verify',
+      name: 'verify',
+      components: {
+        verify: verify
+      }
+    },
+    {
       path: '/login',
       name: 'login',
       components: {
         login: login
+      }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      components: {
+        register: register
       }
     },
     {
