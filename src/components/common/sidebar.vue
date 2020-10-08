@@ -5,10 +5,14 @@
                 <ul>
                     <br/>
                     <div class="logo">
-                        <span style="text-align:center;color:white" v-text="message">Myzone</span>
+                        <span style="text-align:center;color:white" v-text="message">菜单</span>
                          <br/>
                     </div>
-                    <li class="label">菜单</li>
+                    <li class="label">
+                        <span @click="$store.dispatch('setIsSideBar')">
+                            &lt;&lt;收起
+                        </span>
+                    </li>
                     <li :class="(isIndex)?'active':''">
                         <a @click="jump('/')">
                             <i class="ti-home"></i> 我的主页
@@ -141,6 +145,7 @@ export default {
       // console.log(curPath)
       if (!(this.$route.path === curPath)) {
         this.$router.push(curPath)
+        this.$store.dispatch('setIsSideBar')
       }
     }
   }

@@ -13,8 +13,8 @@
                                         <div class="user-profile">
                                             <div class="row">
                                                 <div class="col-lg-6">
-                                                    <div class="user-photo m-b-30">
-                                                    <img class="img-fluid" :src="user.avatar" alt="" width="100%" height="100%" />
+                                                    <div class="user-photo m-b-30" style="text-align: center;">
+                                                    <img class="img-fluid" :src="user.avatar" alt="" width="500px" height="500px" />
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -59,15 +59,15 @@
                                                                     <br/>
                                                                     <div class="phone-content">
                                                                         <span class="contact-title"> 电话号码: </span>
-                                                                        <span class="phone-number"> {{user.mobile}} </span>
+                                                                        <span class="phone-number"> 保密 </span>
                                                                     </div>
                                                                     <div class="email-content">
                                                                         <span class="contact-title"> 电子邮件: </span>
-                                                                        <span class="contact-email"> 未设置 </span>
+                                                                        <span class="contact-email"> {{user.email}} </span>
                                                                     </div>
                                                                     <div class="website-content">
                                                                         <span class="contact-title"> 个人主页: </span>
-                                                                        <span class="contact-website"> 未设置 </span>
+                                                                        <span class="contact-website"> 保密 </span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -94,7 +94,7 @@ export default {
   data () {
     return {
       user: this.$store.state.user,
-      roles: ['系统', '普通用户', '管理员']
+      roles: ['游客', '普通用户', '管理员', '系统']
     }
   },
   methods: {

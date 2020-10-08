@@ -7,7 +7,7 @@
                 <div class="container-fluid">
                     <section id="main-content">
                         <div class="row">
-                            <div class="col-lg-5">
+                            <div class="col-lg-5" id="elsInfo">
                                 <div class="card">
                                     <div class="card-title">
                                         <h4>艾尔之光新闻</h4>
@@ -30,7 +30,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-7">
+                            <div class="col-lg-7" id="todayCourses">
                                 <div class="card">
                                     <div class="card-title">
                                         <h1 style="text-align:center">今日课程表</h1>

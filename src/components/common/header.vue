@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <div style="height: 65px; background-color: white;">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="float-left">
-                        <div class="hamburger sidebar-toggle" @click="$store.dispatch('changeSideBar')">
+                        <div class="hamburger sidebar-toggle" @click="$store.dispatch('setIsSideBar')">
                             <span class="line"></span>
                             <span class="line"></span>
                             <span class="line"></span>
@@ -15,7 +15,7 @@
                         <div :class="messageDropdownClass">
                             <div class="header-icon" data-toggle="dropdown" @click="changeMessageClass">
                                 <i class="ti-bell"></i>
-                                <div :class="messageClass" style="position: absolute; transform: translate3d(-227px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <div :class="messageClass" style="position: absolute; transform: translate(-100px, 40px); top: 0px; left: 0px; will-change: transform;">
                                     <div class="dropdown-content-heading">
                                         <span class="text-left">通知</span>
                                     </div>
@@ -40,11 +40,12 @@
                         </div>
                         <div :class="infoDropdownClass">
                             <div class="header-icon" data-toggle="dropdown" @click="changeInfoClass">
+                                <img :src="this.$store.state.user.avatar" style="width:30px; height:30px; border-radius:50%; "/>
                                 <span class="user-avatar" v-text="this.$store.state.user.nickname">
                                   user
                                   <i class="ti-angle-down f-s-10"></i>
                                 </span>
-                                <div :class="infoClass" style="position: absolute; transform: translate3d(-124px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <div :class="infoClass" style="position: absolute; transform: translate(-80px, 40px); top: 0px; left: 0px; will-change: transform;">
                                     <div class="dropdown-content-body">
                                         <ul>
                                             <li>
@@ -103,7 +104,6 @@ export default {
     },
     jump (curPath) {
       this.setDefault()
-      console.log(this.$route.path)
       if (!(this.$route.path === curPath)) {
         this.$router.push(curPath)
       }

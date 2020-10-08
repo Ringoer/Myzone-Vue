@@ -98,6 +98,7 @@ export default {
       queryString: '',
       queryPage: '',
       page: 1,
+      maxPage: 5,
       tabs: [1, 2, 3, 4, 5]
     }
   },
@@ -192,22 +193,31 @@ export default {
     },
     MyChangePage (tab) {
       this.page = tab
-      let values = [0, 0, 0, 0, 0]
-      if (tab >= 3) {
-        for (var i = 0; i < 5; i++) {
-          values[i] = tab - 2 + i
-        }
-      } else {
-        for (i = 0; i < 5; i++) {
-          values[i] = i + 1
-        }
+      let values = []
+
+      let maxTab = this.maxPage
+      let minTab = 1
+
+      if (+tab > 3 && tab + 2 < +maxTab) {
+        maxTab = tab + 2
+      } else if (+tab <= 3 && +maxTab > 5) {
+        maxTab = 5
       }
+
+      if (+tab > 3 && +maxTab > 5) {
+        minTab = maxTab - 4
+      }
+
+      for (let i = minTab; +i <= maxTab; i++) {
+        values.push(i)
+      }
+
       this.tabs = values
       this.getCourses()
     },
     MyTurnTo () {
-      var n = Math.floor(Number(this.queryPage))
-      if (!(n !== Infinity && String(n) === this.queryPage && n > 0)) {
+      let n = Math.floor(Number(this.queryPage))
+      if (!(n !== Infinity && String(n) === this.queryPage && +n > 0 && +n < +this.maxPage)) {
         let str = '跳转页码不合法！'
         this.MyError(str)
       } else {

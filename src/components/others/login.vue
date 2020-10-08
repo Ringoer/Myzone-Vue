@@ -97,7 +97,9 @@ export default {
               .then(() => {
                 this.$store.dispatch('setIsLogin', true)
                 this.$store.dispatch('setToken', response.data.data.token)
-                localStorage.setItem('token', response.data.data.token)
+                if (this.isRemember) {
+                  localStorage.setItem('token', response.data.data.token)
+                }
 
                 this.$axios.get('/api/user/info', {
                   headers: {

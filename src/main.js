@@ -4,8 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+// import ElementUI from 'element-ui'
+// import 'element-ui/lib/theme-chalk/index.css'
 
 import VueRouter from 'vue-router'
 import axios from 'axios'
@@ -16,7 +16,7 @@ import store from './store/index'
 Vue.prototype.$axios = axios
 Vue.prototype.$swal = swal
 
-Vue.use(ElementUI)
+// Vue.use(ElementUI)
 Vue.use(VueRouter)
 
 Vue.config.productionTip = false

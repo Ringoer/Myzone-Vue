@@ -9,8 +9,9 @@ const store = new Vuex.Store({
     course: null,
     isLogin: false,
     token: '',
-    widthOfSideBar: '15%',
-    widthOfMain: '85%'
+    isSideBar: false
+    // widthOfSideBar: '15%',
+    // widthOfMain: '85%'
   },
   mutations: {
     setUser (state, user) {
@@ -25,15 +26,18 @@ const store = new Vuex.Store({
     setCourse (state, course) {
       state.course = course
     },
-    changeSideBar (state) {
-      if (state.widthOfSideBar === '15%') {
-        state.widthOfSideBar = '0'
-        state.widthOfMain = '100%'
-      } else {
-        state.widthOfSideBar = '15%'
-        state.widthOfMain = '85%'
-      }
+    setIsSideBar (state) {
+      state.isSideBar = !state.isSideBar
     }
+    // changeSideBar (state) {
+    //   if (state.widthOfSideBar === '15%') {
+    //     state.widthOfSideBar = '0'
+    //     state.widthOfMain = '100%'
+    //   } else {
+    //     state.widthOfSideBar = '15%'
+    //     state.widthOfMain = '85%'
+    //   }
+    // }
   },
   actions: {
     setUser (context, user) {
@@ -48,9 +52,12 @@ const store = new Vuex.Store({
     setCourse (context, course) {
       context.commit('setCourse', course)
     },
-    changeSideBar (context) {
-      context.commit('changeSideBar')
+    setIsSideBar (context) {
+      context.commit('setIsSideBar')
     }
+    // changeSideBar (context) {
+    //   context.commit('changeSideBar')
+    // }
   }
 })
 

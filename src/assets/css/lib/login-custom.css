@@ -416,7 +416,8 @@ z-index: 96;
 }
 .main-bottom {
 	z-index: 94;
-	background-image:url(http://pic.ringoer.com/id63819688.png);filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="http://pic.ringoer.com/id63819688.png", sizingMethod="scale");
+	background-image:url(http://pic.ringoer.com/id63819688.png);
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="http://pic.ringoer.com/id63819688.png", sizingMethod="scale");
 }
 .aside {
 position: absolute;

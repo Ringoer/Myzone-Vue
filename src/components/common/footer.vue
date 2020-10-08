@@ -1,8 +1,8 @@
 <template>
-    <div class="container-fluid">
+    <div class="container-fluid" style="height: 50px">
         <div class="row" style="width:100%">
             <div class="col-lg-12">
-                <p style="text-align:center">Copyright &copy; 2019.Ringoer All rights reserved. <a target="_blank" href="http://ringoer.com">Ringo's Coding Life</a></p>
+                <p style="text-align:center">Copyright &copy; 2019-2020.Ringoer All rights reserved. <a target="_blank" href="http://ringoer.com">Ringo's Coding Life</a></p>
             </div>
         </div>
     </div>

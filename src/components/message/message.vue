@@ -11,17 +11,11 @@
                 <div class="card">
                   <div class="card-title">
                     <h1 style="text-align:center">我的消息</h1>
-                    <div class="col-lg-1" style="float:left">
-                      <a href="javascript:void(0)" @click="AllDelete" type="button" class="btn btn-primary btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-trash"></i> 批量删除 </a>
-                    </div>
-                    <div class="col-lg-1" style="float:left">
-                      <a href="javascript:void(0)" @click="$router.push('/message/add')" type="button" class="btn btn-success btn-flat btn-addon m-b-10 m-l-5"><i class="ti-plus"></i> 发送消息 </a>
-                    </div>
-                    <div class="col-lg-1" style="float:left">
-                      <a href="javascript:void(0)" @click="updateMessages(true)" type="button" class="btn btn-info btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-check"></i> 标为已读 </a>
-                    </div>
-                    <div class="col-lg-1" style="float:left">
-                      <a href="javascript:void(0)" @click="updateMessages(false)" type="button" class="btn btn-default btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-close"></i> 标为未读 </a>
+                    <div style="display: flex; justify-content: flex-start">
+                        <a href="javascript:void(0)" @click="AllDelete" type="button" class="btn btn-primary btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-trash"></i> 批量删除 </a>
+                        <a href="javascript:void(0)" @click="$router.push('/message/add')" type="button" class="btn btn-success btn-flat btn-addon m-b-10 m-l-5"><i class="ti-plus"></i> 发送消息 </a>
+                        <a href="javascript:void(0)" @click="updateMessages(true)" type="button" class="btn btn-info btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-check"></i> 标为已读 </a>
+                        <a href="javascript:void(0)" @click="updateMessages(false)" type="button" class="btn btn-default btn-flat btn-addon m-b-10 m-l-5"><i class="fa fa-close"></i> 标为未读 </a>
                     </div>
                   </div>
                   <div class="card-body">

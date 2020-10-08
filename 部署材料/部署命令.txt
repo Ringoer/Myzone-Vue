@@ -1,0 +1,1 @@
+docker run -d --name myzone-vue -p 80:80 -v /root/myzone/vue/dist:/usr/share/nginx/html myzone-vue
